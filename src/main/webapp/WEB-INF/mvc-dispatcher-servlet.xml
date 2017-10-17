@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+">
+    <context:component-scan base-package="com.wiztech.controller" />
+
+    <!--  service classes-->
+    <bean id="productService" class="com.wiztech.service.ProductService" autowire="default" />
+    <bean id="accountService" class="com.wiztech.service.AccountService" autowire="default" />
+    <bean id="cityService" class="com.wiztech.service.CityService" autowire="default" />
+    <bean id="customerService" class="com.wiztech.service.CustomerService" autowire="default" />
+    <bean id="payableService" class="com.wiztech.service.PayableService" autowire="default" />
+    <bean id="provinceService" class="com.wiztech.service.ProvinceService" autowire="default" />
+    <bean id="transactionService" class="com.wiztech.service.TransactionService" autowire="default" />
+    <bean id="transactionTypeService" class="com.wiztech.service.TransactionTypeService" autowire="default" />
+    <bean id="vendorService" class="com.wiztech.service.VendorService" autowire="default" />
+
+    <!--  dao classes-->
+    <bean id="productDao" class="com.wiztech.dao.Impl.ProductDaoImpl" autowire="default" />
+    <bean id="accountDao" class="com.wiztech.dao.Impl.AccountDaoImpl" autowire="default" />
+    <bean id="cityDao" class="com.wiztech.dao.Impl.CityDaoImpl" autowire="default" />
+    <bean id="customerDao" class="com.wiztech.dao.Impl.CustomerDaoImpl" autowire="default" />
+    <bean id="payableDao" class="com.wiztech.dao.Impl.PayableDaoImpl" autowire="default" />
+    <bean id="provinceDao" class="com.wiztech.dao.Impl.ProvinceDaoImpl" autowire="default" />
+    <bean id="transactionDao" class="com.wiztech.dao.Impl.TransactionDaoImpl" autowire="default" />
+    <bean id="transactionTypeDao" class="com.wiztech.dao.Impl.TransactionTypeDaoImpl" autowire="default" />
+    <bean id="vendorDao" class="com.wiztech.dao.Impl.VendorDaoImpl" autowire="default" />
+
+    <!--  datasource -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost/fuelmanagementsystem" />
+        <property name="username" value="root" />
+        <property name="password" value="" />
+    </bean>
+
+   <!-- Hibernate Session Factory -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" autowire="byType">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.primeid.model" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>  
+                <prop key="hibernate.hbm2ddl.auto">none</prop>    
+
+                <!-- <prop key="hibernate.hbm2ddl.auto">none</prop> 
+               <prop key="hibernate.hbm2ddl.auto">create-drop</prop>   
+                -->
+            </props>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.wiztech.model.Product</value>
+                <value>com.wiztech.model.Account</value>
+                <value>com.wiztech.model.City</value>
+                <value>com.wiztech.model.Customer</value>
+                <value>com.wiztech.model.Payable</value>
+                <value>com.wiztech.model.Product</value>
+                <value>com.wiztech.model.Province</value>
+                <value>com.wiztech.model.Transaction</value>
+                <value>com.wiztech.model.TransactionType</value>
+                <value>com.wiztech.model.Vendor</value>
+            </list>
+        </property>
+    </bean>
+
+        <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    
+    <bean id = "transactionManager" class = "org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name = "sessionFactory" ref = "sessionFactory" />
+    </bean>
+
+    <!--  view resolver -->
+    <bean id = "viewResolver" 
+      class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      
+      <property name = "prefix" value = "/WEB-INF/jsp/" />
+      <property name = "suffix" value = ".jsp" />
+   </bean>
+    
+   <mvc:resources mapping = "/static/**" location = "/WEB-INF/static/" />
+   <mvc:annotation-driven/>
+
+</beans>
